@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Course Details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #333;
+    }
+    .course-info {
+      margin-bottom: 20px;
+    }
+    .course-info img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .button-container form {
+      display: inline;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1em;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .inner-course {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: #f9f9f9;
+    }
+    .inner-course h4 {
+      margin-top: 0;
+      font-size: 1.2em;
+    }
+    .inner-course p {
+      margin: 0;
+    }
+    a {
+      text-decoration: none;
+      color: #007bff;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="course-info">
+    <h1 th:text="${course.title}">Course Title</h1>
+    <p th:text="${course.description}">Course Description</p>
+    <img th:src="@{${course.photoPath}}" alt="Course Photo">
+  </div>
+
+  <h3>КУРСЫ</h3>
+  <div>
+    <div th:each="innerCourse : ${course.innerCourses}" class="inner-course">
+      <h4 th:text="${innerCourse.title}">Inner Course Title</h4>
+      <p th:text="${innerCourse.content}">Inner Course Content</p>
+    </div>
+  </div>
+
+  <a href="/courses">НАЗАД В КУРСЫ</a>
+</div>
+</body>
+</html>

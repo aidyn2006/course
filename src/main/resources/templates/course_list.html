@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Course List</title>
+    <style>
+        .course-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .course-card {
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .course-card img {
+            width: 100%;
+            height: auto;
+        }
+        .course-card h2 {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+        .course-card p {
+            font-size: 1em;
+            margin: 10px 0;
+        }
+        .course-card a {
+            display: block;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .course-card a:hover {
+            background-color: #0056b3;
+        }
+        .add-to-favorites {
+            display: block;
+            text-align: center;
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 10px auto;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+        }
+        .add-to-favorites:hover {
+            background-color: #218838;
+        }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .actions form {
+            display: inline;
+        }
+        .actions button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .actions button:hover {
+            background-color: #0056b3;
+        }
+        .add-course-button {
+            display: block;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 20px auto;
+            width: 200px;
+        }
+        .add-course-button:hover {
+            background-color: #0056b3;
+        }
+        .back-to-courses {
+            display: block;
+            text-align: center;
+            background-color: #6c757d;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 20px auto;
+            width: 200px;
+        }
+        .back-to-courses:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+<h1>КУРСЫ</h1>
+
+<a href="/courses/new" class="add-course-button" sec:authorize="hasRole('Teacher')">ДОБАВИТЬ КУРС</a>
+
+<div class="course-container">
+    <div class="course-card" th:each="course : ${courses}">
+        <img th:src="@{${course.photoPath}}" alt="Course Image">
+        <h2 th:text="${course.title}"></h2>
+        <p th:text="${course.description}"></p>
+        <a th:href="@{/courses/inner-courses/{courseId}(courseId=${course.id})}">НАЧАТЬ</a>
+
+        <div class="actions" sec:authorize="hasRole('Teacher')">
+            <form th:action="@{/courses/edit/{id}(id=${course.id})}" method="get">
+                <button type="submit">ОБНОВИТЬ</button>
+            </form>
+            <form th:action="@{/courses/delete/{id}(id=${course.id})}" method="post">
+                <input type="hidden" name="_method" value="delete" />
+                <button type="submit">УДАЛИТЬ</button>
+            </form>
+        </div>
+
+        <form th:action="@{/courses/add-to-favorites(userId=${userId}, courseId=${course.id})}" method="post">
+            <button type="submit" class="add-to-favorites">СОХРАНИТЬ В ИЗБРАННЫЕ</button>
+        </form>
+    </div>
+</div>
+<a href="/courses/show-favo" class="back-to-courses">ИЗБРАННЫЕ</a>
+
+</body>
+</html>
