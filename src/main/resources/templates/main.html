@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Favorite Courses</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #343a40;
+        }
+        .course-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .course-card {
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .course-card img {
+            width: 100%;
+            height: auto;
+        }
+        .course-card h2 {
+            font-size: 1.5em;
+            margin: 15px 10px 5px;
+            color: #007bff;
+        }
+        .course-card p {
+            font-size: 1em;
+            margin: 5px 10px 15px;
+            color: #6c757d;
+        }
+        .course-card a {
+            display: block;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .course-card a:hover {
+            background-color: #0056b3;
+        }
+        .delete-btn {
+            display: block;
+            text-align: center;
+            background-color: #dc3545;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            margin: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .add-courses-btn {
+            display: block;
+            text-align: center;
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 20px auto;
+            width: 200px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .add-courses-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<h1>ИЗБРАННЫЕ</h1>
+
+<a href="/courses" class="add-courses-btn">ДОБАВИТЬ КУРСЫ</a>
+
+<div class="course-container">
+    <div class="course-card" th:each="course : ${courses}">
+        <img th:src="@{${course.photoPath}}" alt="Course Image">
+        <h2 th:text="${course.title}"></h2>
+        <p th:text="${course.description}"></p>
+        <a th:href="@{/courses/inner-courses/{courseId}(courseId=${course.id})}">НАЧАТЬ</a>
+
+        <form th:action="@{/courses/remove-favorite/{courseId}(courseId=${course.id})}" method="post">
+            <button type="submit" class="delete-btn">УДАЛИТЬ С ИЗБРАННОГО</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

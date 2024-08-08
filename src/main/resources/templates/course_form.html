@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Course</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"], textarea, input[type="file"] {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+            font-size: 1em;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .inner-courses-container {
+            margin-top: 20px;
+        }
+        .inner-course {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+        }
+        .inner-course h4 {
+            margin-top: 0;
+            font-size: 1.2em;
+        }
+        .inner-course label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .inner-course input, .inner-course textarea {
+            margin-bottom: 10px;
+        }
+        .add-inner-course-btn {
+            background-color: #28a745;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .add-inner-course-btn:hover {
+            background-color: #218838;
+        }
+        .submit-btn {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>ДОБАВИТЬ КУРС</h1>
+
+    <form id="courseForm" th:action="@{/courses}" th:object="${courseDto}" method="post" enctype="multipart/form-data">
+        <label for="title">НАЗВАНИЕ:</label>
+        <input type="text" id="title" th:field="*{title}" required/>
+
+        <label for="description">ОПИСАНИЕ:</label>
+        <textarea id="description" th:field="*{description}" required></textarea>
+
+        <label for="photo">ФОТО:</label>
+        <input type="file" id="photo" th:field="*{photo}" accept="image/*" required/>
+
+        <h3>Inner Courses</h3>
+        <div id="innerCoursesContainer" class="inner-courses-container">
+        </div>
+        <button type="button" class="add-inner-course-btn" onclick="addInnerCourse()">ДОБАВИТЬ INNER COURSES</button>
+
+        <button type="submit" class="submit-btn">ГОТОВА</button>
+    </form>
+</div>
+
+<script>
+    function addInnerCourse() {
+        const container = document.getElementById('innerCoursesContainer');
+        const index = container.children.length;
+
+        const innerCourseDiv = document.createElement('div');
+        innerCourseDiv.className = 'inner-course';
+        innerCourseDiv.innerHTML = `
+            <h4>Inner Course ${index + 1}</h4>
+            <label for="innerCourseTitle_${index}">Title:</label>
+            <input type="text" id="innerCourseTitle_${index}" name="innerCoursesTitles[${index}]" /><br/>
+
+            <label for="innerCourseContent_${index}">Content:</label>
+            <textarea id="innerCourseContent_${index}" name="innerCoursesContents[${index}]" ></textarea>
+        `;
+
+        container.appendChild(innerCourseDiv);
+    }
+</script>
+</body>
+</html>
