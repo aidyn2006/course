@@ -133,8 +133,11 @@ public class CourseController {
 
             List<Course> courses = new ArrayList<>();
             for (Favo favo : favoriteCourses) {
-                courses.add(favo.getCourse());
+                if (favo.getCourse() != null) {  // Проверяем, что курс не null
+                    courses.add(favo.getCourse());
+                }
             }
+
             model.addAttribute("courses", courses);
         } else {
             model.addAttribute("courses", new ArrayList<>());

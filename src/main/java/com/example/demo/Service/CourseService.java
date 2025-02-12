@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,15 +48,12 @@ public class CourseService {
             User user = userOptional.get();
             Course course = courseOptional.get();
 
-            for (Favo favo : user.getFavorites()) {
-                if (favo.getCourse().equals(course)) {
-                    return;
-                }
-            }
 
             Favo favo = new Favo();
             favo.setCourse(course);
+            favo.setUsers(Collections.singletonList(user)); // Ошибка! Здесь user — это объект, а нужно List<User>
             favoRepository.save(favo);
+
 
             user.getFavorites().add(favo);
             userRepository.save(user);
