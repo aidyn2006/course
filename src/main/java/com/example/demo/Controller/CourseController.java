@@ -7,8 +7,8 @@ import com.example.demo.Model.InnerCourse;
 import com.example.demo.Model.User;
 import com.example.demo.Repository.UserRepository;
 import com.example.demo.Service.AdminService;
+import com.example.demo.Service.CloudinaryService;
 import com.example.demo.Service.CourseService;
-import com.example.demo.Service.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,14 +29,18 @@ public class CourseController {
     private CourseService courseService;
     private AdminService adminService;
     private UserRepository userRepository;
+    private CloudinaryService cloudinaryService;
 
 
     @Autowired
-    public CourseController(CourseService courseService, AdminService adminService, UserRepository userRepository) {
+    public CourseController(CourseService courseService, AdminService adminService, UserRepository userRepository, CloudinaryService cloudinaryService) {
         this.courseService = courseService;
         this.adminService = adminService;
         this.userRepository = userRepository;
+        this.cloudinaryService = cloudinaryService;
     }
+
+
 
     @GetMapping("/new")
     public String showCourseForm(Model model) {
@@ -54,15 +58,21 @@ public class CourseController {
             innerCourse.setContent(courseDto.getInnerCoursesContents().get(i));
             innerCourses.add(innerCourse);
         }
+
         Course course = new Course();
         course.setTitle(courseDto.getTitle());
         course.setDescription(courseDto.getDescription());
+
+        // Загружаем фото в Cloudinary
+        String photoUrl = cloudinaryService.uploadFile(photo);
+        course.setPhotoPath(photoUrl); // Сохраняем URL в базе данных
+
         adminService.createCourseWithInnerCourses(course, innerCourses, photo);
         return "redirect:/courses";
     }
 
     @GetMapping("/{id}")
-    public String getCourse(@PathVariable Long id, Model model) {
+    public String getCourse(@PathVariable String id, Model model) {
         Optional<Course> course = courseService.findById(id);
         if (course.isPresent()) {
             model.addAttribute("course", course.get());
@@ -89,7 +99,7 @@ public class CourseController {
     }
 
     @GetMapping("/inner-courses/{courseId}")
-    public String listInnerCourses(@PathVariable Long courseId, Model model) {
+    public String listInnerCourses(@PathVariable String courseId, Model model) {
         Optional<Course> course = courseService.findById(courseId);
         if (course.isPresent()) {
             model.addAttribute("course", course.get());
@@ -100,8 +110,8 @@ public class CourseController {
     }
 
     @PostMapping("/add-to-favorites")
-    public String addToFavorites(@RequestParam("userId") Long userId,
-                                 @RequestParam("courseId") Long courseId) {
+    public String addToFavorites(@RequestParam("userId") String userId,
+                                 @RequestParam("courseId") String courseId) {
         try {
             courseService.addCourseToFavorites(userId, courseId);
             return "redirect:/courses/" + courseId;
@@ -118,8 +128,8 @@ public class CourseController {
         String username = authentication.getName();
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
-            Long userId = userOptional.get().getId();
-            List<Favo> favoriteCourses = courseService.findFavoriteCoursesByUserId(userId);
+            String userId = userOptional.get().getId();
+            List<Favo> favoriteCourses = courseService.findFavoriteCoursesByUserId((userId));
 
             List<Course> courses = new ArrayList<>();
             for (Favo favo : favoriteCourses) {
@@ -142,8 +152,8 @@ public class CourseController {
         Optional<User> userOptional = userRepository.findByUsername(username);
 
         if (userOptional.isPresent()) {
-            Long userId = userOptional.get().getId();
-            courseService.removeFavoriteCourse(userId, courseId);
+            String userId = userOptional.get().getId();
+            courseService.removeFavoriteCourse(userId, String.valueOf(courseId));
             redirectAttributes.addFlashAttribute("message", "Course removed from favorites successfully.");
         } else {
             redirectAttributes.addFlashAttribute("error", "User not found.");
@@ -153,7 +163,7 @@ public class CourseController {
     }
 
     @GetMapping("/edit/{id}")
-    public String showUpdateForm(@PathVariable Long id, Model model) {
+    public String showUpdateForm(@PathVariable String id, Model model) {
         Optional<Course> course = courseService.findById(id);
         if (course.isPresent()) {
             CourseDto courseDto = new CourseDto();
@@ -182,12 +192,12 @@ public class CourseController {
     @PutMapping("/update/{id}")
     public String updateCourse(@PathVariable Long id, @ModelAttribute CourseDto courseDto,
                                @RequestParam(value = "photo", required = false) MultipartFile photo) {
-        adminService.updateCourse(id, courseDto, photo);
+        adminService.updateCourse(String.valueOf(id), courseDto, photo);
         return "redirect:/courses/" + id;
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteCourse(@PathVariable Long id) {
+    public String deleteCourse(@PathVariable String id) {
         adminService.deleteCourse(id);
         return "redirect:/courses";
     }

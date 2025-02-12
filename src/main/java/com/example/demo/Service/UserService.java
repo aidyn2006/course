@@ -31,8 +31,7 @@ public class UserService {
                 .email(userDtoReg.getEmail())
                 .phone(userDtoReg.getPhone())
                 .password(passwordEncoder.encode(userDtoReg.getPassword()))
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .role(Role.Student)
+                .role(Role.Teacher)
                 .build();
         userRepository.save(user);
     }

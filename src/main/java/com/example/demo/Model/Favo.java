@@ -1,29 +1,28 @@
 package com.example.demo.Model;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Document(collection = "favo")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "favo")
+@Builder
 public class Favo {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
+    @DBRef
     private Course course;
 
-    @ManyToMany(mappedBy = "favorites")
+    @DBRef
     private List<User> users = new ArrayList<>();
 }
-

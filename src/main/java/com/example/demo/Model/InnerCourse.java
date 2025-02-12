@@ -1,26 +1,24 @@
 package com.example.demo.Model;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+@Document(collection = "inner_course")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "inner_course")
+@Builder
 public class InnerCourse {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String id;
     private String title;
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id")
+    @DBRef
     private Course course;
 }
-
-

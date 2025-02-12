@@ -21,16 +21,18 @@ import java.util.Optional;
 
 @Service
 public class AdminService {
-    private UserRepository userRepository;
-    private FileStorageService fileStorageService;
-    private CourseRepository courseRepository;
-    private InnerCourseRepository innerCourseRepository;
-    private FavoRepository favoRepository;
+    private final UserRepository userRepository;
+    private final CloudinaryService cloudinaryService; // Используем CloudinaryService
+    private final CourseRepository courseRepository;
+    private final InnerCourseRepository innerCourseRepository;
+    private final FavoRepository favoRepository;
 
     @Autowired
-    public AdminService(UserRepository userRepository, FileStorageService fileStorageService, CourseRepository courseRepository, InnerCourseRepository innerCourseRepository, FavoRepository favoRepository) {
+    public AdminService(UserRepository userRepository, CloudinaryService cloudinaryService,
+                        CourseRepository courseRepository, InnerCourseRepository innerCourseRepository,
+                        FavoRepository favoRepository) {
         this.userRepository = userRepository;
-        this.fileStorageService = fileStorageService;
+        this.cloudinaryService = cloudinaryService;
         this.courseRepository = courseRepository;
         this.innerCourseRepository = innerCourseRepository;
         this.favoRepository = favoRepository;
@@ -40,29 +42,23 @@ public class AdminService {
     @PreAuthorize("hasRole('Teacher')")
     public Course createCourseWithInnerCourses(Course course, List<InnerCourse> innerCourses, MultipartFile photo) {
         if (photo != null && !photo.isEmpty()) {
-            String photoPath = fileStorageService.storeFile(photo);
-            course.setPhotoPath(fileStorageService.getFilePath(photoPath));
+            String photoUrl = cloudinaryService.uploadFile(photo); // Загружаем в Cloudinary
+            course.setPhotoPath(photoUrl); // Сохраняем URL
         }
 
         Course savedCourse = courseRepository.save(course);
-        System.out.println("Saved course ID: " + savedCourse.getId());
-        System.out.println("Number of inner courses: " + innerCourses.size());
-
         for (InnerCourse innerCourse : innerCourses) {
             innerCourse.setCourse(savedCourse);
-            InnerCourse savedInnerCourse = innerCourseRepository.save(innerCourse);
-            System.out.println("Saved inner course ID: " + savedInnerCourse.getId());
+            innerCourseRepository.save(innerCourse);
         }
 
         savedCourse.setInnerCourses(innerCourses);
         return courseRepository.save(savedCourse);
     }
 
-
-
     @Transactional
     @PreAuthorize("hasRole('Teacher')")
-    public void updateCourse(Long id, CourseDto courseDto, MultipartFile photo) {
+    public void updateCourse(String id, CourseDto courseDto, MultipartFile photo) {
         Optional<Course> courseOptional = courseRepository.findById(id);
         if (courseOptional.isPresent()) {
             Course course = courseOptional.get();
@@ -79,22 +75,22 @@ public class AdminService {
             course.setInnerCourses(innerCourses);
 
             if (photo != null && !photo.isEmpty()) {
-                String photoPath = fileStorageService.storeFile(photo);
-                course.setPhotoPath(fileStorageService.getFilePath(photoPath));
+                String photoUrl = cloudinaryService.uploadFile(photo); // Загружаем в Cloudinary
+                course.setPhotoPath(photoUrl);
             }
 
             courseRepository.save(course);
         } else {
             throw new RuntimeException("Course not found with id: " + id);
         }
-    }
 
+    }
     @Transactional
     @PreAuthorize("hasRole('Teacher')")
-    public void deleteCourse(Long id) {
+    public void deleteCourse(String id) {
         favoRepository.deleteById(id);
         innerCourseRepository.deleteById(id);
         courseRepository.deleteById(id);
     }
-
 }
+

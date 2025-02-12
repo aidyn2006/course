@@ -30,7 +30,7 @@ public class CourseService {
         this.favoRepository = favoRepository;
     }
 
-    public Optional<Course> findById(Long id) {
+    public Optional<Course> findById(String id) {
         return courseRepository.findById(id);
     }
 
@@ -39,7 +39,7 @@ public class CourseService {
     }
 
     @Transactional
-    public void addCourseToFavorites(Long userId, Long courseId) {
+    public void addCourseToFavorites(String userId, String courseId) {
         Optional<User> userOptional = userRepository.findById(userId);
         Optional<Course> courseOptional = courseRepository.findById(courseId);
 
@@ -64,14 +64,14 @@ public class CourseService {
         }
     }
 
-    public List<Favo> findFavoriteCoursesByUserId(Long userId) {
+    public List<Favo> findFavoriteCoursesByUserId(String userId) {
         return userRepository.findById(userId)
                 .map(User::getFavorites)
                 .orElse(new ArrayList<>());
     }
 
     @Transactional
-    public void removeFavoriteCourse(Long userId, Long courseId) {
+    public void removeFavoriteCourse(String userId, String courseId) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();

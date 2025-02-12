@@ -1,37 +1,31 @@
 package com.example.demo.Model;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Document(collection = "courses")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "courses")
+@Builder
 public class Course {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "title", nullable = false)
+    private String id;
     private String title;
-
-    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-
-    @Column(name = "photo_path")
     private String photoPath;
 
-    @ManyToMany(mappedBy = "courses")
+    @DBRef
     private List<User> users = new ArrayList<>();
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @DBRef
     private List<InnerCourse> innerCourses = new ArrayList<>();
 }
-
