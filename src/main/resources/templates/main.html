@@ -109,6 +109,7 @@
         <a th:href="@{/courses/inner-courses/{courseId}(courseId=${course.id})}">НАЧАТЬ</a>
 
         <form th:action="@{/courses/remove-favorite/{courseId}(courseId=${course.id})}" method="post">
+            <input type="hidden" name="_method" value="delete"/>
             <button type="submit" class="delete-btn">УДАЛИТЬ С ИЗБРАННОГО</button>
         </form>
     </div>

@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -148,7 +149,7 @@ public class CourseController {
 
 
     @PostMapping("/remove-favorite/{courseId}")
-    public String removeFavorite(@PathVariable("courseId") Long courseId, RedirectAttributes redirectAttributes) {
+    public String removeFavorite(@PathVariable("courseId") String courseId, RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
@@ -204,5 +205,29 @@ public class CourseController {
         adminService.deleteCourse(id);
         return "redirect:/courses";
     }
+
+    @GetMapping("/findByTitle")
+    public String findCoursesByTitle(@RequestParam(name = "title", required = false) String title, Model model) {
+        List<Course> courses = (title != null && !title.isEmpty())
+                ? courseService.searchByName(title)
+                : courseService.findAll();
+
+        model.addAttribute("courses", courses);
+        model.addAttribute("param", Map.of("title", title));
+        return "course_list";
+    }
+
+    @GetMapping("/findByDescription")
+    public String findCoursesByDescription(@RequestParam(name = "description", required = false) String description, Model model) {
+        List<Course> courses = (description != null && !description.isEmpty())
+                ? courseService.findByDef(description)
+                : courseService.findAll();
+
+        model.addAttribute("courses", courses);
+        model.addAttribute("param", Map.of("description", description));
+        return "course_list";
+    }
+
+
 
 }

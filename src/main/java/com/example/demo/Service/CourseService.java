@@ -73,10 +73,19 @@ public class CourseService {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.getFavorites().removeIf(favo -> favo.getCourse().getId().equals(courseId));
+            user.getFavorites().removeIf(favo ->
+                    favo.getCourse() != null && favo.getCourse().getId().equals(courseId)
+            );
             userRepository.save(user);
         }
     }
 
 
+    public List<Course> searchByName(String name) {
+        return courseRepository.findByTitle(name);
+    }
+
+    public List<Course> findByDef(String name) {
+        return courseRepository.findByDef(name);
+    }
 }
