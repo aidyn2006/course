@@ -1,93 +1,118 @@
-# ufuturetask
+# Project Documentation
 
+## Overview
 
+This project provides a **Course Management System** where two types of users, **Teachers** and **Students**, interact with courses. The **Teacher** role allows users to manage (add, update, delete) courses and their content, while the **Student** role allows users to enroll in courses, view their details, and add them to their favorites.
 
-## Getting started
+---
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Features
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### 1. **Login & Registration**:
+- **Login**: Users can log in with their credentials.
+- **Registration**: New users can register by providing necessary details.
 
-## Add your files
+### 2. **Course Management** (For Teachers):
+- **Create Course**: Teachers can create new courses and add their contents.
+- **Update Course**: Teachers can edit existing courses, including the content and photo.
+- **Delete Course**: Teachers can delete courses that are no longer needed.
+- **View Course Details**: Teachers and students can view detailed information about courses.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+### 3. **Course Interaction** (For Students):
+- **View Courses**: Students can browse through the available courses.
+- **Enroll in Courses**: Students can enroll in courses and start learning.
+- **Add to Favorites**: Students can add courses to their favorites for easy access.
+- **Remove from Favorites**: Students can remove courses from their favorites.
+- **Group Courses**: Students and Teachers can filter and view courses grouped by title or description.
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/aidyn4/ufuturetask.git
-git branch -M main
-git push -uf origin main
-```
+### 4. **Course Content**:
+- **Inner Courses**: Courses can have sub-courses (Inner Courses), which can also be viewed and managed by teachers.
 
-## Integrate with your tools
+---
 
-- [ ] [Set up project integrations](https://gitlab.com/aidyn4/ufuturetask/-/settings/integrations)
+## User Roles
 
-## Collaborate with your team
+### Teacher:
+- **Course Management**: Teachers can add, update, and delete courses.
+- **Inner Courses**: Teachers can manage individual lessons inside each course.
+- **Favorite Courses**: Teachers can view courses in their favorites.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### Student:
+- **Enroll in Courses**: Students can choose to enroll in courses and start learning.
+- **View Courses**: Students can explore a list of available courses.
+- **Add to Favorites**: Students can mark courses as favorites for later access.
+- **Manage Favorites**: Students can remove courses from their favorites list.
 
-## Test and Deploy
+---
 
-Use the built-in continuous integration in GitLab.
+## Endpoints
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### **/auth** (Authentication)
+- **GET /auth/login**: Displays the login page.
+- **POST /auth/login**: Logs the user in.
+- **GET /auth/register**: Displays the registration page.
+- **POST /auth/register**: Registers a new user.
 
-***
+### **/courses** (Course Management)
+- **GET /courses/new**: Displays the form to create a new course (for teachers).
+- **POST /courses**: Creates a new course (for teachers).
+- **GET /courses/{id}**: Displays the details of a specific course.
+- **GET /courses**: Displays the list of all courses.
+- **GET /courses/inner-courses/{courseId}**: Displays the inner courses of a specific course.
+- **POST /courses/add-to-favorites**: Adds a course to the student's favorites.
+- **GET /courses/show-favo**: Displays the list of favorite courses for the logged-in user.
+- **POST /courses/remove-favorite/{courseId}**: Removes a course from the student's favorites.
+- **GET /courses/edit/{id}**: Displays the form to edit an existing course.
+- **PUT /courses/update/{id}**: Updates the details of an existing course (for teachers).
+- **POST /courses/delete/{id}**: Deletes a course (for teachers).
+- **GET /courses/findByTitle**: Searches for courses by title.
+- **GET /courses/findByDescription**: Searches for courses by description.
+- **GET /courses/groupBy**: Groups courses by title or description.
 
-# Editing this README
+---
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+## Technologies Used
+- **Spring Boot**: Backend framework for building REST APIs and web pages.
+- **Spring Security**: Secures the application with user authentication and role-based access.
+- **MongoDB**: Database used to store course and user data.
+- **Cloudinary**: Used for handling image uploads (course photos).
+- **Thymeleaf**: Template engine for rendering HTML views.
 
-## Suggestions for a good README
+---
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## How to Run
 
-## Name
-Choose a self-explaining name for your project.
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-repository-url.git
+   ```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+2. **Setup the database**:
+    - Install and configure MongoDB.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+3. **Run the application**:
+    - Use the following command to run the Spring Boot application:
+      ```bash
+      ./mvnw spring-boot:run
+      ```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+4. **Access the application**:
+    - Navigate to `http://localhost:8080` in your browser to access the app.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+---
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Contribution Guidelines
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Commit your changes and push to your forked repository.
+4. Create a pull request with a description of your changes.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+---
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
