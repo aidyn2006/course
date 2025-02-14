@@ -31,7 +31,7 @@ public class UserService {
                 .email(userDtoReg.getEmail())
                 .phone(userDtoReg.getPhone())
                 .password(passwordEncoder.encode(userDtoReg.getPassword()))
-                .role(Role.Teacher)
+                .role(userDtoReg.getRole())
                 .build();
         userRepository.save(user);
     }

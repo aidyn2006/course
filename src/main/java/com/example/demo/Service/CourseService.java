@@ -7,6 +7,9 @@ import com.example.demo.Repository.CourseRepository;
 import com.example.demo.Repository.FavoRepository;
 import com.example.demo.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +26,16 @@ public class CourseService {
     private UserRepository userRepository;
 
     private FavoRepository favoRepository;
+    private MongoTemplate mongoTemplate;
+
 
     @Autowired
-    public CourseService(CourseRepository courseRepository, UserRepository userRepository, FavoRepository favoRepository) {
+    public CourseService(CourseRepository courseRepository, UserRepository userRepository,
+                         FavoRepository favoRepository, MongoTemplate mongoTemplate) {
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
         this.favoRepository = favoRepository;
+        this.mongoTemplate=mongoTemplate;
     }
 
     public Optional<Course> findById(String id) {
@@ -88,4 +95,10 @@ public class CourseService {
     public List<Course> findByDef(String name) {
         return courseRepository.findByDef(name);
     }
+
+    public List<Course> getGroupedAndSortedCourses(String title) {
+        return courseRepository.aggregateCourseCount(title);
+    }
+
+
 }

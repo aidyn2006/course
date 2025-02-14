@@ -4,62 +4,221 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <style>
-        /* Add some basic styling */
-        .container {
-            max-width: 400px;
-            margin: auto;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        .container h2 {
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
+            transition: all 0.4s ease;
+            animation: containerAppear 0.6s ease-out;
+        }
+
+        @keyframes containerAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            color: #2d3748;
+            font-size: 2.5em;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            position: relative;
         }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 25px;
+            position: relative;
         }
+
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
         }
+
         .form-group input {
             width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            transition: all 0.3s ease;
+            color: #2d3748;
         }
+
+        .form-group input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+            outline: none;
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+        }
+
         .form-group button {
             width: 100%;
-            padding: 10px;
-            background-color: #007bff;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
+
         .form-group button:hover {
-            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .form-group button:active {
+            transform: translateY(0);
+        }
+
+        .form-group a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #4a5568;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .form-group a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .form-group a:hover {
+            color: #667eea;
+        }
+
+        .form-group a:hover::after {
+            width: 100%;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h2 {
+                font-size: 2em;
+            }
+
+            .form-group input,
+            .form-group button {
+                padding: 12px;
+            }
+        }
+
+        /* Add floating label animation */
+        .form-group {
+            position: relative;
+            margin-bottom: 35px;
+        }
+
+        .floating-label {
+            position: absolute;
+            pointer-events: none;
+            left: 15px;
+            top: 15px;
+            transition: 0.2s ease all;
+            color: #a0aec0;
+        }
+
+        .form-group input:focus ~ .floating-label,
+        .form-group input:not(:placeholder-shown) ~ .floating-label {
+            top: -25px;
+            left: 0;
+            font-size: 0.85em;
+            color: #667eea;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Login</h2>
+    <h2>Welcome Back</h2>
     <form th:action="@{/auth/login}" method="post">
         <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username" required placeholder=" ">
+            <label for="username" class="floating-label">Username</label>
         </div>
         <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" required placeholder=" ">
+            <label for="password" class="floating-label">Password</label>
         </div>
         <div class="form-group">
-            <button type="submit">Login</button>
+            <button type="submit">Sign In</button>
         </div>
     </form>
+
+    <div class="form-group">
+        <a href="http://localhost:8080/auth/register">Don't have an account? Register here</a>
+    </div>
 </div>
 
 </body>

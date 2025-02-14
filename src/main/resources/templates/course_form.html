@@ -2,125 +2,281 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Course</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #16a34a;
+            --background-color: #f8fafc;
+            --card-background: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
         }
-        h1 {
-            color: #333;
-            text-align: center;
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
         }
+
         .container {
             max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            background: var(--card-background);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+        }
+
         form {
             display: flex;
             flex-direction: column;
+            gap: 1.5rem;
         }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
         label {
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 1.1rem;
         }
-        input[type="text"], textarea, input[type="file"] {
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            margin-bottom: 15px;
-            font-size: 1em;
+
+        input[type="text"],
+        textarea {
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: #f8fafc;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .file-input-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background-color: #f8fafc;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-input-label:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        input[type="file"] {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1em;
-            border-radius: 4px;
+            height: 100%;
             cursor: pointer;
-            margin-top: 10px;
         }
-        button:hover {
-            background-color: #0056b3;
-        }
+
         .inner-courses-container {
-            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
+
         .inner-course {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: #f9f9f9;
+            background-color: #f8fafc;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: var(--transition);
         }
+
+        .inner-course:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
         .inner-course h4 {
-            margin-top: 0;
-            font-size: 1.2em;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        .inner-course label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .inner-course input, .inner-course textarea {
-            margin-bottom: 10px;
-        }
-        .add-inner-course-btn {
-            background-color: #28a745;
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
             border: none;
-            color: white;
-            padding: 10px 20px;
-            font-size: 1em;
-            border-radius: 4px;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            margin-top: 10px;
-        }
-        .add-inner-course-btn:hover {
-            background-color: #218838;
-        }
-        .submit-btn {
-            background-color: #007bff;
-            border: none;
+            transition: var(--transition);
             color: white;
-            padding: 10px 20px;
-            font-size: 1em;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 20px;
         }
-        .submit-btn:hover {
-            background-color: #0056b3;
+
+        .btn i {
+            font-size: 1.2rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-success {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-success:hover {
+            background-color: #15803d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(22, 163, 74, 0.2);
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .buttons-container {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>ДОБАВИТЬ КУРС</h1>
+    <h1>Create Course</h1>
 
     <form id="courseForm" th:action="@{/courses}" th:object="${courseDto}" method="post" enctype="multipart/form-data">
-        <label for="title">НАЗВАНИЕ:</label>
-        <input type="text" id="title" th:field="*{title}" required/>
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" th:field="*{title}" required placeholder="Введите название курса"/>
+        </div>
 
-        <label for="description">ОПИСАНИЕ:</label>
-        <textarea id="description" th:field="*{description}" required></textarea>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" th:field="*{description}" required placeholder="Введите описание курса"></textarea>
+        </div>
 
-        <label for="photo">ФОТО:</label>
-        <input type="file" id="photo" th:field="*{photo}" accept="image/*" required/>
+        <div class="form-group">
+            <label for="photo">Photo:</label>
+            <div class="file-input-container">
+                <label class="file-input-label">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Choose a file</span>
+                    <input type="file" id="photo" th:field="*{photo}" accept="image/*" required/>
+                </label>
+            </div>
+        </div>
 
         <h3>Inner Courses</h3>
         <div id="innerCoursesContainer" class="inner-courses-container">
         </div>
-        <button type="button" class="add-inner-course-btn" onclick="addInnerCourse()">ДОБАВИТЬ INNER COURSES</button>
 
-        <button type="submit" class="submit-btn">ГОТОВА</button>
+        <div class="buttons-container">
+            <button type="button" class="btn btn-success" onclick="addInnerCourse()">
+                <i class="fas fa-plus"></i>
+                Add Inner Courses
+            </button>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-check"></i>
+                Done
+            </button>
+        </div>
     </form>
 </div>
 
@@ -132,15 +288,66 @@
         const innerCourseDiv = document.createElement('div');
         innerCourseDiv.className = 'inner-course';
         innerCourseDiv.innerHTML = `
-            <h4>Inner Course ${index + 1}</h4>
-            <label for="innerCourseTitle_${index}">Title:</label>
-            <input type="text" id="innerCourseTitle_${index}" name="innerCoursesTitles[${index}]" /><br/>
-
-            <label for="innerCourseContent_${index}">Content:</label>
-            <textarea id="innerCourseContent_${index}" name="innerCoursesContents[${index}]" ></textarea>
-        `;
+                <h4>
+                    <i class="fas fa-book"></i>
+                    Inner Course ${index + 1}
+                </h4>
+                <div class="form-group">
+                    <label for="innerCourseTitle_${index}">Title:</label>
+                    <input type="text"
+                           id="innerCourseTitle_${index}"
+                           name="innerCoursesTitles[${index}]"
+                           placeholder="Enter inner course title"
+                           required />
+                </div>
+                <div class="form-group">
+                    <label for="innerCourseContent_${index}">Content:</label>
+                    <textarea id="innerCourseContent_${index}"
+                              name="innerCoursesContents[${index}]"
+                              placeholder="Enter inner course content"
+                              required></textarea>
+                </div>
+            `;
 
         container.appendChild(innerCourseDiv);
+    }
+
+    const fileInput = document.getElementById('photo');
+    const fileLabel = document.querySelector('.file-input-label');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        fileLabel.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        fileLabel.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        fileLabel.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        fileLabel.style.borderColor = 'var(--primary-color)';
+        fileLabel.style.backgroundColor = 'rgba(37, 99, 235, 0.05)';
+    }
+
+    function unhighlight(e) {
+        fileLabel.style.borderColor = '';
+        fileLabel.style.backgroundColor = '';
+    }
+
+    fileLabel.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        fileInput.files = files;
     }
 </script>
 </body>

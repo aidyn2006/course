@@ -4,74 +4,271 @@
     <meta charset="UTF-8">
     <title>Register</title>
     <style>
-        .container {
-            max-width: 400px;
-            margin: auto;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        .container h2 {
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
+            transition: all 0.4s ease;
+            animation: containerAppear 0.6s ease-out;
+        }
+
+        @keyframes containerAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            color: #2d3748;
+            font-size: 2.5em;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            position: relative;
         }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 25px;
+            position: relative;
         }
+
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
         }
-        .form-group input {
+
+        .form-group input,
+        .form-group select {
             width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            transition: all 0.3s ease;
+            color: #2d3748;
         }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+            outline: none;
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+            padding-right: 45px;
+        }
+
         .form-group button {
             width: 100%;
-            padding: 10px;
-            background-color: #28a745;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            margin-top: 20px;
         }
+
         .form-group button:hover {
-            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .form-group button:active {
+            transform: translateY(0);
+        }
+
+        .form-group a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #4a5568;
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .form-group a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .form-group a:hover {
+            color: #667eea;
+        }
+
+        .form-group a:hover::after {
+            width: 100%;
+        }
+
+        [th\:errors] {
+            color: #e53e3e;
+            font-size: 0.85em;
+            margin-top: 5px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background: rgba(229, 62, 62, 0.1);
+            animation: errorAppear 0.3s ease-out;
+        }
+
+        @keyframes errorAppear {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .floating-label {
+            position: absolute;
+            pointer-events: none;
+            left: 15px;
+            top: 15px;
+            transition: 0.2s ease all;
+            color: #a0aec0;c
+        }
+
+        .form-group input:focus ~ .floating-label,
+        .form-group input:not(:placeholder-shown) ~ .floating-label {
+            top: -25px;
+            left: 0;
+            font-size: 0.85em;
+            color: #667eea;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h2 {
+                font-size: 2em;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group button {
+                padding: 12px;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Register</h2>
+    <h2>Create Account</h2>
     <form th:action="@{/auth/register}" th:object="${userDtoReg}" method="post">
         <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" th:field="*{username}" required>
+            <input type="text" id="username" th:field="*{username}" required placeholder=" ">
+            <label for="username" class="floating-label">Username</label>
             <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
         </div>
+
         <div class="form-group">
-            <label for="phone">Phone:</label>
-            <input type="text" id="phone" th:field="*{phone}" required>
+            <input type="text" id="phone" th:field="*{phone}" required placeholder=" ">
+            <label for="phone" class="floating-label">Phone Number</label>
             <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
         </div>
+
         <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" th:field="*{email}" required>
+            <input type="email" id="email" th:field="*{email}" required placeholder=" ">
+            <label for="email" class="floating-label">Email Address</label>
             <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
         </div>
+
         <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" th:field="*{password}" required>
+            <input type="password" id="password" th:field="*{password}" required placeholder=" ">
+            <label for="password" class="floating-label">Password</label>
             <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
         </div>
+
         <div class="form-group">
-            <button type="submit">Register</button>
+            <label for="role">Select Your Role</label>
+            <select id="role" th:field="*{role}" required>
+                <option value="" disabled selected>Choose your role</option>
+                <option value="Student">Student</option>
+                <option value="Teacher">Teacher</option>
+            </select>
+            <div th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit">Create Account</button>
         </div>
     </form>
 
+    <div class="form-group">
+        <a href="http://localhost:8080/auth/login">Already have an account? Sign in here</a>
+    </div>
 </div>
 
 </body>

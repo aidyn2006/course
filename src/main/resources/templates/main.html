@@ -2,116 +2,250 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Favorite Courses</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
-        h1 {
+
+        body {
+            background: linear-gradient(135deg, #f6f9fc 0%, #edf1f7 100%);
+            color: #2d3748;
+            min-height: 100vh;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 20px;
             text-align: center;
-            color: #343a40;
-        }
-        .course-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-        .course-card {
-            width: 300px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            background-color: white;
-            transition: transform 0.3s, box-shadow 0.3s;
         }
+
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        h1 {
+            color: white;
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2em;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .add-courses-btn {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin: 30px auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-courses-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: #f8f9fa;
+        }
+
+        .course-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+        }
+
         .course-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
         }
+
         .course-card img {
             width: 100%;
-            height: auto;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 4px solid #667eea;
         }
+
+        .course-content {
+            padding: 20px;
+        }
+
         .course-card h2 {
-            font-size: 1.5em;
-            margin: 15px 10px 5px;
-            color: #007bff;
+            font-size: 1.8em;
+            color: #2d3748;
+            margin-bottom: 15px;
+            line-height: 1.3;
         }
+
         .course-card p {
-            font-size: 1em;
-            margin: 5px 10px 15px;
-            color: #6c757d;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 1.1em;
         }
+
         .course-card a {
             display: block;
-            text-align: center;
-            background-color: #007bff;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
-            padding: 10px;
+            padding: 15px;
             text-decoration: none;
-            border-radius: 4px;
-            margin: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
         }
+
         .course-card a:hover {
-            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
+
         .delete-btn {
             display: block;
-            text-align: center;
-            background-color: #dc3545;
+            background: #ff6b6b;
             color: white;
-            padding: 10px;
-            text-decoration: none;
-            margin: 10px;
-            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+            border-radius: 12px;
+            border: none;
+            width: 100%;
+            font-size: 1em;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
         }
+
         .delete-btn:hover {
-            background-color: #c82333;
+            background: #fa5252;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(250, 82, 82, 0.3);
         }
+
+        @media (max-width: 768px) {
+            .header-section {
+                padding: 40px 20px;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .course-container {
+                padding: 20px;
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Modified button styles to ensure proper clicking */
         .add-courses-btn {
-            display: block;
-            text-align: center;
-            background-color: #28a745;
-            color: white;
-            padding: 10px;
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 15px 40px;
             text-decoration: none;
-            border-radius: 4px;
-            margin: 20px auto;
-            width: 200px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin: 30px auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: none;
             cursor: pointer;
-            transition: background-color 0.3s;
+            /* Ensuring the button is clickable */
+            position: relative;
+            z-index: 1;
         }
+
         .add-courses-btn:hover {
-            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: #f8f9fa;
+        }
+
+        /* Making sure the header section doesn't interfere with button clicks */
+        .header-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            /* Ensure proper stacking context */
+            z-index: 0;
+        }
+
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            /* Ensure the pseudo-element stays behind */
+            z-index: -1;
         }
     </style>
 </head>
 <body>
-<h1>ИЗБРАННЫЕ</h1>
-
-<a href="/courses" class="add-courses-btn">ДОБАВИТЬ КУРСЫ</a>
+<div class="header-section">
+    <h1>Favorite Courses</h1>
+    <p class="header-description">Your personal collection of selected courses. Here are all the materials that you are interested in.</p>
+    <!-- Changed to direct link instead of form for better navigation -->
+    <a href="/courses" class="add-courses-btn">Add courses</a>
+</div>
 
 <div class="course-container">
     <div class="course-card" th:each="course : ${courses}">
         <img th:src="@{${course.photoPath}}" alt="Course Image">
-        <h2 th:text="${course.title}"></h2>
-        <p th:text="${course.description}"></p>
-        <a th:href="@{/courses/inner-courses/{courseId}(courseId=${course.id})}">НАЧАТЬ</a>
+        <div class="course-content">
+            <h2 th:text="${course.title}"></h2>
+            <p th:text="${course.description}"></p>
+            <a th:href="@{/courses/inner-courses/{courseId}(courseId=${course.id})}">Start course</a>
 
-        <form th:action="@{/courses/remove-favorite/{courseId}(courseId=${course.id})}" method="post">
-            <input type="hidden" name="_method" value="delete"/>
-            <button type="submit" class="delete-btn">УДАЛИТЬ С ИЗБРАННОГО</button>
-        </form>
+            <form th:action="@{/courses/remove-favorite/{courseId}(courseId=${course.id})}" method="post">
+                <input type="hidden" name="_method" value="delete"/>
+                <button type="submit" class="delete-btn">Delete from favorites</button>
+            </form>
+        </div>
     </div>
 </div>
 </body>

@@ -10,6 +10,11 @@ import com.example.demo.Service.AdminService;
 import com.example.demo.Service.CloudinaryService;
 import com.example.demo.Service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -30,15 +35,18 @@ public class CourseController {
     private CourseService courseService;
     private AdminService adminService;
     private UserRepository userRepository;
+    private MongoTemplate mongoTemplate;
     private CloudinaryService cloudinaryService;
 
 
     @Autowired
-    public CourseController(CourseService courseService, AdminService adminService, UserRepository userRepository, CloudinaryService cloudinaryService) {
+    public CourseController(CourseService courseService, AdminService adminService, UserRepository userRepository, CloudinaryService cloudinaryService,
+                            MongoTemplate mongoTemplate) {
         this.courseService = courseService;
         this.adminService = adminService;
         this.userRepository = userRepository;
         this.cloudinaryService = cloudinaryService;
+        this.mongoTemplate=mongoTemplate;
     }
 
 
@@ -227,6 +235,59 @@ public class CourseController {
         model.addAttribute("param", Map.of("description", description));
         return "course_list";
     }
+
+//    @GetMapping("/count")
+//    public String getCourseCount(@RequestParam String title, Model model) {
+//        Integer count = courseService.getCourseCount(title);
+//        if (count== 0) {
+//            model.addAttribute("message", "Курсы с таким названием не найдены.");
+//        } else {
+//            model.addAttribute("title", title);
+//            model.addAttribute("courseCount", count);  // Просто передаем количество
+//        }
+//        return "course_list";  // Название вашего HTML-шаблона
+//    }
+
+    @GetMapping("/groupBy")
+    public String groupBy(@RequestParam String grouping, Model model) {
+        Aggregation aggregation;
+
+        if ("title".equals(grouping)) {
+            aggregation = Aggregation.newAggregation(
+                    Aggregation.match(Criteria.where("title").exists(true)),
+                    Aggregation.group("title")
+                            .count().as("total")
+                            .first("photoPath").as("photoPath"),  // захват первого значения photoPath
+                    Aggregation.sort(Sort.by(Sort.Order.asc("title")))
+            );
+        } else if ("description".equals(grouping)) {
+            aggregation = Aggregation.newAggregation(
+                    Aggregation.match(Criteria.where("description").exists(true)),
+                    Aggregation.group("description")
+                            .count().as("total")
+                            .first("photoPath").as("photoPath"),  // захват первого значения photoPath
+                    Aggregation.sort(Sort.by(Sort.Order.asc("description")))
+            );
+        } else {
+            aggregation = Aggregation.newAggregation(
+                    Aggregation.match(Criteria.where("title").exists(true)),
+                    Aggregation.group("title")
+                            .count().as("total")
+                            .first("photoPath").as("photoPath"),
+                    Aggregation.sort(Sort.by(Sort.Order.asc("title")))
+            );
+        }
+
+        AggregationResults<Course> results = mongoTemplate.aggregate(aggregation, Course.class, Course.class);
+        List<Course> courses = results.getMappedResults();
+
+        model.addAttribute("courses", courses);
+        return "course_list";  // имя вашего шаблона
+    }
+
+
+
+
 
 
 

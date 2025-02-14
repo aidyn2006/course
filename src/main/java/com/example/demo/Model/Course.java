@@ -21,10 +21,10 @@ public class Course {
     @Id
     private String id;
 
-//    @TextIndexed
+    @TextIndexed
     private String title;
 
-//    @TextIndexed
+    @TextIndexed
     private String description;
 
     private String photoPath;
@@ -34,4 +34,5 @@ public class Course {
 
     @DBRef
     private List<InnerCourse> innerCourses = new ArrayList<>();
+
 }

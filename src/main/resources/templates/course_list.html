@@ -4,101 +4,269 @@
     <meta charset="UTF-8">
     <title>Course List</title>
     <style>
-        .course-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .course-card {
-            width: 300px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            padding: 10px;
+        * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f6f9fc 0%, #edf1f7 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3.5em;
+            margin-bottom: 40px;
+            color: #1a237e;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-container form {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .search-container input,
+        .search-container select {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-container input:focus,
+        .search-container select:focus {
+            border-color: #3f51b5;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(63, 81, 181, 0.2);
+        }
+
+        .search-container button,
+        .add-course-button,
+        .course-card .actions button,
+        .add-to-favorites {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #3f51b5 0%, #5c6bc0 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(63, 81, 181, 0.3);
+        }
+
+        .search-container button:hover,
+        .add-course-button:hover,
+        .course-card .actions button:hover,
+        .add-to-favorites:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(63, 81, 181, 0.4);
+        }
+
+        .course-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+            padding: 0 20px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: all 0.4s ease;
             position: relative;
         }
+
+        .course-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
         .course-card img {
             width: 100%;
-            height: auto;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 4px solid #3f51b5;
         }
+
         .course-card h2 {
-            font-size: 1.5em;
-            margin: 10px 0;
+            font-size: 1.8em;
+            margin: 20px;
+            color: #1a237e;
+            font-weight: 700;
         }
+
         .course-card p {
-            font-size: 1em;
-            margin: 10px 0;
+            font-size: 1.1em;
+            margin: 0 20px 25px;
+            color: #546e7a;
+            line-height: 1.6;
         }
-        .search-container {
-            text-align: center;
-            margin-bottom: 20px;
+
+        .course-card .actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background: #f5f7fa;
+            gap: 15px;
         }
-        .search-container input {
-            padding: 10px;
-            width: 300px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .search-container button {
-            padding: 10px 15px;
-            background-color: #007bff;
+
+        .start-course {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 20px;
+            text-decoration: none;
+            background: linear-gradient(45deg, #43a047 0%, #66bb6a 100%);
             color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(67, 160, 71, 0.3);
         }
-        .search-container button:hover {
-            background-color: #0056b3;
+
+        .start-course:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 160, 71, 0.4);
+        }
+
+        .add-to-favorites {
+            width: calc(100% - 40px);
+            margin: 20px;
+            background: linear-gradient(45deg, #e91e63 0%, #f06292 100%);
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+        }
+
+        .add-to-favorites:hover {
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+        }
+
+        .back-to-courses {
+            display: inline-block;
+            margin: 40px auto;
+            padding: 20px 40px;
+            font-size: 1.3em;
+            color: white;
+            text-decoration: none;
+            background: linear-gradient(45deg, #3f51b5 0%, #5c6bc0 100%);
+            border-radius: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(63, 81, 181, 0.3);
+            text-align: center;
+            width: fit-content;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .back-to-courses:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 6px 20px rgba(63, 81, 181, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .course-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+
 <h1>КУРСЫ</h1>
-<!-- Форма поиска по названию -->
+
 <div class="search-container">
     <form action="/courses/findByTitle" method="get">
-        <input type="text" name="title" placeholder="Поиск по названию..." th:value="${param.title}">
-        <button type="submit">Искать</button>
+        <input type="text" name="title" placeholder="Search by title..." th:value="${param.title}">
+        <button type="submit">Search</button>
     </form>
 </div>
 
-<!-- Форма поиска по описанию -->
 <div class="search-container">
     <form action="/courses/findByDescription" method="get">
-        <input type="text" name="description" placeholder="Поиск по описанию..." th:value="${param.description}">
-        <button type="submit">Искать</button>
+        <input type="text" name="description" placeholder="Search by description..." th:value="${param.description}">
+        <button type="submit">Search</button>
     </form>
 </div>
 
+<div class="search-container">
+    <form action="/courses/groupBy" method="get">
+        <label for="grouping">Group by:</label>
+        <select name="grouping" id="grouping">
+            <option value="title" th:selected="${param.grouping == 'title'}">Title</option>
+            <option value="description" th:selected="${param.grouping == 'description'}">Description</option>
+        </select>
+        <button type="submit">Group by</button>
+    </form>
+</div>
 
-<!-- Кнопка для добавления нового курса -->
-<a href="/courses/new" class="add-course-button" sec:authorize="hasRole('Teacher')">ДОБАВИТЬ КУРС</a>
+<a href="/courses/new" class="add-course-button" sec:authorize="hasRole('Teacher')">Add Course</a>
 
 <div class="course-container">
     <div class="course-card" th:each="course : ${courses}">
         <img th:src="@{${course.photoPath}}" alt="Course Image">
         <h2 th:text="${course.title}"></h2>
         <p th:text="${course.description}"></p>
-        <a th:href="@{/courses/inner-courses/{courseId}(courseId=${course.id})}">НАЧАТЬ</a>
+        <a th:href="@{/courses/inner-courses/{courseId}(courseId=${course.id})}" class="start-course">Start</a>
 
         <div class="actions" sec:authorize="hasRole('Teacher')">
             <form th:action="@{/courses/edit/{id}(id=${course.id})}" method="get">
-                <button type="submit">ОБНОВИТЬ</button>
+                <button type="submit">Update</button>
             </form>
             <form th:action="@{/courses/delete/{id}(id=${course.id})}" method="post">
                 <input type="hidden" name="_method" value="delete" />
-                <button type="submit">УДАЛИТЬ</button>
+                <button type="submit">Delete</button>
             </form>
         </div>
 
         <form th:action="@{/courses/add-to-favorites(userId=${userId}, courseId=${course.id})}" method="post">
-            <button type="submit" class="add-to-favorites">СОХРАНИТЬ В ИЗБРАННЫЕ</button>
+            <button type="submit" class="add-to-favorites">Save to favorites</button>
         </form>
     </div>
 </div>
-<a href="/courses/show-favo" class="back-to-courses">ИЗБРАННЫЕ</a>
+
+<a href="/courses/show-favo" class="back-to-courses">Favorites</a>
 
 </body>
 </html>

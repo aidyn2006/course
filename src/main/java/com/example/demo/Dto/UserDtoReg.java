@@ -1,5 +1,6 @@
 package com.example.demo.Dto;
 
+import com.example.demo.util.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -29,4 +30,6 @@ public class UserDtoReg {
     @NotEmpty(message = "Password should not be empty!")
     @Size(min = 6, message = "Password should be at least 6 characters long")
     private String password;
+
+    private Role role;
 }

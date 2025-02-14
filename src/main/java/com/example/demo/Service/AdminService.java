@@ -80,6 +80,7 @@ public class AdminService {
             }
 
             courseRepository.save(course);
+            courseRepository.deleteById(course.getId());
         } else {
             throw new RuntimeException("Course not found with id: " + id);
         }
